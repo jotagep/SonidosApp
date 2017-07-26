@@ -1,14 +1,41 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>
-      Ionic Blank
+      Sonidos App
     </ion-title>
+    <ion-buttons end>
+      <button ion-button type="text" (click)="ordenando = true" *ngIf="!ordenando">
+        Ordenar
+      </button>
+      <button ion-button type="text" (click)="ordenando = false" *ngIf="ordenando">
+        Listo
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+  <ion-refresher [enabled]="!ordenando" (ionRefresh)="recargar_animales($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list [reorder]="ordenando" (ionItemReorder)="reordenar($event)">
+    <ion-item-sliding *ngFor="let animal of animales; let i = index">
+      <ion-item (click)="reproducir(animal)">
+        <ion-avatar item-start>
+          <img [src]="animal.imagen">
+        </ion-avatar>
+        <h2>{{animal.nombre}}</h2>
+        <ion-icon name="play" item-end *ngIf="!animal.reproduciendo"></ion-icon>
+        <ion-icon name="pause" item-end *ngIf="animal.reproduciendo"></ion-icon>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button color="danger" (click)="borrar_animal(i)">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+          </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
 </ion-content>
